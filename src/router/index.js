@@ -8,13 +8,36 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-	  path: '/',
-	  component: Home
-  },
-  {
     path: '/login',
     name: 'Login',
     component: () => import('../views/Login')
+  },
+  {
+  	path: '/',
+  	component: Home,
+  	redirect: '/dashboard',
+  	children:[
+  		{
+  			path: '/dashboard',
+  			name:'Dashboard',
+  			component: () => import('@/views/Dashboard')
+  		},
+		{
+			path: '/user/user',
+			name:'User',
+			component: () => import('@/views/user/user')
+		},
+  		{
+  			path: '/minapp/minapp',
+  			name:'Minapp',
+  			component: () => import('@/views/minapp/minapp')
+  		},
+  		{
+  			path: '/artcile/artcile',
+  			name:'Artcile',
+  			component: () => import('@/views/artcile/artcile')
+  		}
+  	]
   }
  
 ]

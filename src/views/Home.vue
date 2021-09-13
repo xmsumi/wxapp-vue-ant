@@ -2,23 +2,24 @@
   <a-layout class="main" id="components-layout-demo-custom-trigger">
     <a-layout-sider v-model="collapsed" :trigger="null" collapsible>
       <img class="logo" title="内容管理系统" src="@/assets/logo.png" width="60">
-      <a-menu
-            :default-selected-keys="['1']"
-            mode="inline"
-            theme="dark"
-            :inline-collapsed="collapsed"
-          >
-            <a-menu-item key="1" class="a-menu-item">
-              <a-icon type="home" />
-              <span>管理首页</span>
+      <a-menu  :default-selected-keys="['/']"  mode="inline" theme="dark"  :inline-collapsed="collapsed" >
+            <a-menu-item key="/" class="a-menu-item">
+				<router-link :to="{ name: 'Dashboard' }">
+				  <a-icon type="home" />
+				  <span>管理首页</span>
+				 </router-link>
             </a-menu-item>
-            <a-menu-item key="2">
-              <a-icon type="desktop" />
-              <span>小程序管理</span>
+            <a-menu-item key="/minapp/minapp">
+				<router-link :to="{ name: 'Minapp' }">
+				  <a-icon type="desktop" />
+				  <span>小程序管理</span>
+				  </router-link>
             </a-menu-item>
-            <a-menu-item key="3">
-              <a-icon type="user" />
-              <span>用户管理</span>
+            <a-menu-item key="/user/user">
+				<router-link :to="{ name: 'User' }">
+				  <a-icon type="user" />
+				  <span>用户管理</span>
+				</router-link>
             </a-menu-item>
             <a-sub-menu key="sub1">
               <span slot="title"><a-icon type="read" /><span>内容管理</span></span>
@@ -65,12 +66,12 @@
 					 />
 		        </a-col>
 		        <a-col :span="2">
-		           <a-dropdown>
+		           <a-dropdown :size="large">
 		               <a class="ant-dropdown-link" @click="e => e.preventDefault()">
 		                 <a-icon type="setting" />  管理设置 <a-icon type="down" />
 		               </a>
 		               <a-menu slot="overlay">
-		                 <a-menu-item key="0">
+		                 <a-menu-item key="0" @click="showModal">
 		                   系统设置
 		                 </a-menu-item>
 		                 <a-menu-item key="1">
@@ -82,6 +83,82 @@
 		                 </a-menu-item>
 		               </a-menu>
 		             </a-dropdown>
+					 <a-modal
+					       title="Title"
+					       :visible="visible"
+					       :confirm-loading="confirmLoading"
+					       @ok="handleOk"
+					       @cancel="handleCancel"
+						   width = "700px"
+					     >
+					       <a-form-model
+					           ref="ruleForm"
+					           :model="form"
+					           :rules="rules"
+					           :label-col="labelCol"
+					           :wrapper-col="wrapperCol"
+					         >
+					           <a-form-model-item ref="name" label="Activity name" prop="name">
+					             <a-input
+					               v-model="form.name"
+					               @blur="
+					                 () => {
+					                   $refs.name.onFieldBlur();
+					                 }
+					               "
+					             />
+					           </a-form-model-item>
+					           <a-form-model-item label="Activity zone" prop="region">
+					             <a-select v-model="form.region" placeholder="please select your zone">
+					               <a-select-option value="shanghai">
+					                 Zone one
+					               </a-select-option>
+					               <a-select-option value="beijing">
+					                 Zone two
+					               </a-select-option>
+					             </a-select>
+					           </a-form-model-item>
+					           <a-form-model-item label="Activity time" required prop="date1">
+					             <a-date-picker
+					               v-model="form.date1"
+					               show-time
+					               type="date"
+					               placeholder="Pick a date"
+					               style="width: 100%;"
+					             />
+					           </a-form-model-item>
+					           <a-form-model-item label="Instant delivery" prop="delivery">
+					             <a-switch v-model="form.delivery" />
+					           </a-form-model-item>
+					           <a-form-model-item label="Activity type" prop="type">
+					             <a-checkbox-group v-model="form.type">
+					               <a-checkbox value="1" name="type">
+					                 Online
+					               </a-checkbox>
+					               <a-checkbox value="2" name="type">
+					                 Promotion
+					               </a-checkbox>
+					               <a-checkbox value="3" name="type">
+					                 Offline
+					               </a-checkbox>
+					             </a-checkbox-group>
+					           </a-form-model-item>
+					           <a-form-model-item label="Resources" prop="resource">
+					             <a-radio-group v-model="form.resource">
+					               <a-radio value="1">
+					                 Sponsor
+					               </a-radio>
+					               <a-radio value="2">
+					                 Venue
+					               </a-radio>
+					             </a-radio-group>
+					           </a-form-model-item>
+					           <a-form-model-item label="Activity form" prop="desc">
+					             <a-input v-model="form.desc" type="textarea" />
+					           </a-form-model-item>
+					          
+					         </a-form-model>
+					     </a-modal>
 		        </a-col>
 		      </a-row>
       </a-layout-header>
@@ -90,8 +167,10 @@
       >
          <router-view></router-view>
       </a-layout-content>
+	  
     </a-layout>
   </a-layout>
+  
 </template>
 
 <script>
@@ -100,7 +179,41 @@ export default {
   data(){
   	return{
   		collapsed: false,
-  	}
+		visible: false,
+		confirmLoading: false,
+		labelCol: { span: 4 },
+		      wrapperCol: { span: 14 },
+		      other: '',
+		      form: {
+		        name: '',
+		        region: undefined,
+		        date1: undefined,
+		        delivery: false,
+		        type: [],
+		        resource: '',
+		        desc: '',
+		      },
+		      rules: {
+		        name: [
+		          { required: true, message: 'Please input Activity name', trigger: 'blur' },
+		          { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' },
+		        ],
+		        region: [{ required: true, message: 'Please select Activity zone', trigger: 'change' }],
+		        date1: [{ required: true, message: 'Please pick a date', trigger: 'change' }],
+		        type: [
+		          {
+		            type: 'array',
+		            required: true,
+		            message: 'Please select at least one activity type',
+		            trigger: 'change',
+		          },
+		        ],
+		        resource: [
+		          { required: true, message: 'Please select activity resource', trigger: 'change' },
+		        ],
+		        desc: [{ required: true, message: 'Please input activity form', trigger: 'blur' }],
+		      },
+		    };
   },
   created(){
     
@@ -109,16 +222,28 @@ export default {
 	 logout(){
 		 window.sessionStorage.clear()
 		 this.$router.push('/login')
-	 } 
+	 },
+	 showModal() {
+	       this.visible = true;
+	     },
+	     handleOk(e) {
+	       this.ModalText = 'The modal will be closed after two seconds';
+	       this.confirmLoading = true;
+	       setTimeout(() => {
+	         this.visible = false;
+	         this.confirmLoading = false;
+	       }, 2000);
+	     },
+	     handleCancel(e) {
+	       console.log('Clicked cancel button');
+	       this.visible = false;
+	     },
   }
 }
 </script>
 <style>
 .main{
 	height: 100vh;
-}
-.a-menu-item{
-	padding: 5px!important;
 }
 #components-layout-demo-custom-trigger .trigger {
   font-size: 18px;
