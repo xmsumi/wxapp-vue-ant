@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // 环境的切换
 if (process.env.NODE_ENV === 'development') {    
-	axios.defaults.baseURL = 'http://api.sumi.com:8088';}
+	axios.defaults.baseURL = 'http://wxapp.com/api';}
 // else if (process.env.NODE_ENV === 'debug') {    
 // 	axios.defaults.baseURL = 'http://wxapp.com/api';
 // } 

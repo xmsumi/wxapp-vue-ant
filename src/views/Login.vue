@@ -30,6 +30,7 @@
 
 <script>
 	export default{
+		name: '系统登录',
 		data(){
 			return{
 				loginform:{
@@ -44,7 +45,7 @@
 		methods:{
 			async login(){
 				
-				await this.$fetch.post('/Member/checkLogin').then(res => {
+				await this.$fetch.post('/index/checkLogin').then(res => {
 					this.$message.success(res.message)
 					//存入session
 					window.sessionStorage.setItem('token',res.token)

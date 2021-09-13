@@ -6,36 +6,67 @@ import Home from '../views/Home.vue'
 
 Vue.use(VueRouter)
 
+const RouteView = {
+  name: 'RouteView',
+  render: h => h('router-view')
+}
+
 const routes = [
   {
     path: '/login',
     name: 'Login',
+	meta: { title: '系统登录' },
     component: () => import('../views/Login')
   },
   {
   	path: '/',
   	component: Home,
+	meta: { title: '管理首页' },
   	redirect: '/dashboard',
   	children:[
   		{
   			path: '/dashboard',
   			name:'Dashboard',
+			meta: { title: '管理首页' },
   			component: () => import('@/views/Dashboard')
   		},
 		{
 			path: '/user/user',
 			name:'User',
+			meta: { title: '用户管理' },
 			component: () => import('@/views/user/user')
 		},
   		{
   			path: '/minapp/minapp',
   			name:'Minapp',
+			meta: { title: '小程序管理' },
   			component: () => import('@/views/minapp/minapp')
   		},
   		{
-  			path: '/artcile/artcile',
-  			name:'Artcile',
-  			component: () => import('@/views/artcile/artcile')
+  			path: '/artcile',
+			name:'Artcile',
+			meta: { title: '内容管理' },
+			component: RouteView,
+			children:[
+				{
+					path: '/artcile/myartcile',
+					name:'MyArtcile',
+					meta: { title: '我的文章' },
+					component: () => import('@/views/artcile/myartcile')
+				},
+				{
+					path: '/artcile/artcile',
+					name:'Artcile',
+					meta: { title: '内容库' },
+					component: () => import('@/views/artcile/artcile')
+				},
+				{
+					path: '/artcile/collect',
+					name:'Collect',
+					meta: { title: '采集管理' },
+					component: () => import('@/views/artcile/collect')
+				},
+			]
   		}
   	]
   }
