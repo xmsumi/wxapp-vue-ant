@@ -1,5 +1,5 @@
 <template>
-	<div>minapp</div>
+	<div>小程序管理</div>
 </template>
 
 <script>
