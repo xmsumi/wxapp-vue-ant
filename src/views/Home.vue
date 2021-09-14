@@ -1,7 +1,7 @@
 <template>
   <a-layout class="main" id="components-layout-demo-custom-trigger">
     <a-layout-sider v-model="collapsed" :trigger="null" collapsible>
-      <img class="logo" title="内容管理系统" src="@/assets/logo.png" width="60">
+      <router-link class="layout-logo opacity" :to="{ name: 'Dashboard' }"><img  title="内容管理系统" src="@/assets/logo-home.png" height="31"> </router-link>
       <a-menu  :default-selected-keys="['/dashboard']"  mode="inline" theme="dark"  :inline-collapsed="collapsed" >
             <a-menu-item key="/dashboard" class="a-menu-item">
 				<router-link :to="{ name: 'Dashboard' }">
@@ -133,6 +133,14 @@ export default {
 <style>
 .main{
 	height: 100vh;
+}
+.layout-logo {
+    overflow: hidden;
+    height: 66px;
+    line-height: 66px;
+    display: block;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,.1);
 }
 #components-layout-demo-custom-trigger .trigger {
   font-size: 18px;

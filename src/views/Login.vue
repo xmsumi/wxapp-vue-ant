@@ -66,7 +66,7 @@
 
 <style>
 	body{
-		background-color: aliceblue;
+		background-color: #f1f1f5;
 	}
 	.vertical, .verticalCen {
 	    display: box;
